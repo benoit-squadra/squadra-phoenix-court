@@ -436,6 +436,27 @@
 </footer>
 
 <script>
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var form = e.target;
+    var data = new FormData(form);
+    var submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString()
+    }).then(function(response){
+      if (!response.ok) { throw new Error('Network response was not ok'); }
+      form.innerHTML = '<p style="font-size:16px;color:var(--ink);max-width:480px;">Thanks, that\'s been sent through. We\'ll get back to you within 48 hours.</p>';
+    }).catch(function(){
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send to Squadra';
+      alert('Something went wrong sending this. Please email benoit@squadra.soy directly instead.');
+    });
+  });
+
   function copyPageLink(){
     var btn = document.getElementById('copyLinkBtn');
     var url = window.location.href;
